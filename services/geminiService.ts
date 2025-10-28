@@ -2,19 +2,32 @@
 import { GoogleGenAI } from "@google/genai";
 import { Lead } from '../types';
 
-const API_KEY = process.env.API_KEY;
+const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 
-if (!API_KEY) {
-  // A real application should handle this more gracefully.
-  // For this context, we assume the key is present.
-  console.warn("API_KEY environment variable not set.");
+let ai: GoogleGenAI | null = null;
+
+if (API_KEY) {
+  ai = new GoogleGenAI({ apiKey: API_KEY });
 }
 
-const ai = new GoogleGenAI({ apiKey: API_KEY! });
-
 export const generateFollowUpEmail = async (lead: Lead): Promise<string> => {
+  if (!ai) {
+    return `Olá ${lead.name},
+
+Espero que esteja bem!
+
+Gostaria de saber se você teve a oportunidade de pensar sobre o ${lead.propertyOfInterest.title} que conversamos. O imóvel tem ${lead.propertyOfInterest.bedrooms} quartos e ${lead.propertyOfInterest.bathrooms} banheiros, com ${lead.propertyOfInterest.area}m² de área.
+
+Estou à disposição para responder qualquer dúvida ou agendar uma nova visita, se desejar. Seria um prazer ajudá-lo a encontrar o imóvel ideal para você.
+
+Aguardo seu retorno.
+
+Atenciosamente,
+Equipe RealtyFlow`;
+  }
+
   const prompt = `
-    You are a professional and friendly real estate agent. 
+    You are a professional and friendly real estate agent.
     Write a concise follow-up email in Portuguese (Brazil) to a potential client.
 
     Client Details:
