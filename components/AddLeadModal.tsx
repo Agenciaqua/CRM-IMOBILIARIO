@@ -7,11 +7,26 @@ interface AddLeadModalProps {
   onAddLead: (leadData: Omit<Lead, 'id' | 'status' | 'lastContact' | 'propertyOfInterest'>) => void;
 }
 
+const leadSources = [
+  'Anúncio',
+  'Indicação',
+  'Redes Sociais',
+  'Site',
+  'Portal Imobiliário',
+  'Meta Ads',
+  'Google Ads',
+  'Email Marketing',
+  'WhatsApp',
+  'Outro'
+];
+
 export const AddLeadModal: React.FC<AddLeadModalProps> = ({ onClose, onAddLead }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [clientNeeds, setClientNeeds] = useState('');
+  const [source, setSource] = useState('Site');
+  const [agent, setAgent] = useState('Não Atribuído');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -19,7 +34,7 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({ onClose, onAddLead }
       alert('Nome e E-mail são obrigatórios.');
       return;
     }
-    onAddLead({ name, email, phone, clientNeeds });
+    onAddLead({ name, email, phone, clientNeeds, source, agent });
   };
 
   return (
@@ -70,8 +85,23 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({ onClose, onAddLead }
               />
             </div>
             <div>
+              <label htmlFor="source" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Origem do Lead</label>
+              <select
+                id="source"
+                value={source}
+                onChange={e => setSource(e.target.value)}
+                className="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm text-gray-900 dark:text-gray-200"
+              >
+                {leadSources.map((sourceOption) => (
+                  <option key={sourceOption} value={sourceOption}>
+                    {sourceOption}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
               <label htmlFor="clientNeeds" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Necessidades do Cliente</label>
-              <textarea 
+              <textarea
                 id="clientNeeds"
                 value={clientNeeds}
                 onChange={e => setClientNeeds(e.target.value)}

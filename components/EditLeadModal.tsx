@@ -8,6 +8,19 @@ interface EditLeadModalProps {
   onUpdateLead: (leadData: Lead) => void;
 }
 
+const leadSources = [
+  'Anúncio',
+  'Indicação',
+  'Redes Sociais',
+  'Site',
+  'Portal Imobiliário',
+  'Meta Ads',
+  'Google Ads',
+  'Email Marketing',
+  'WhatsApp',
+  'Outro'
+];
+
 export const EditLeadModal: React.FC<EditLeadModalProps> = ({ lead, onClose, onUpdateLead }) => {
   const [formData, setFormData] = useState(lead);
 
@@ -15,7 +28,7 @@ export const EditLeadModal: React.FC<EditLeadModalProps> = ({ lead, onClose, onU
     setFormData(lead);
   }, [lead]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
@@ -57,6 +70,22 @@ export const EditLeadModal: React.FC<EditLeadModalProps> = ({ lead, onClose, onU
               <input type="tel" name="phone" id="phone" value={formData.phone} onChange={handleChange}
                 className="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm text-gray-900 dark:text-gray-200"
               />
+            </div>
+            <div>
+              <label htmlFor="source" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Origem do Lead</label>
+              <select
+                name="source"
+                id="source"
+                value={formData.source || 'Site'}
+                onChange={handleChange}
+                className="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm text-gray-900 dark:text-gray-200"
+              >
+                {leadSources.map((sourceOption) => (
+                  <option key={sourceOption} value={sourceOption}>
+                    {sourceOption}
+                  </option>
+                ))}
+              </select>
             </div>
             <div>
               <label htmlFor="clientNeeds" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Necessidades do Cliente</label>
